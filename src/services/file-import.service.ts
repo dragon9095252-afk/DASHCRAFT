@@ -1,7 +1,7 @@
 import type { WorkBook } from 'xlsx'
 import type { Dataset, SourceFileType } from '@/domain/dataset.types'
 import { normalizeSheet } from './data-normalizer.service'
-import { profileColumns } from './data-profiler.service'
+import { profileColumns, refreshLabelWarnings } from './data-profiler.service'
 
 const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024
 export const MAX_FILE_SIZE_LABEL = '20 MB'
@@ -162,6 +162,6 @@ export async function buildDataset(input: BuildDatasetInput): Promise<Dataset> {
     rowCount: normalized.rows.length,
     columns,
     rows: normalized.rows,
-    warnings: normalized.warnings,
+    warnings: refreshLabelWarnings(normalized.warnings, columns, normalized.rows),
   }
 }

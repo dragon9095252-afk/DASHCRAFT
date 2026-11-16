@@ -1,5 +1,17 @@
-import type { ColumnType, DatasetColumn, DatasetRow } from '@/domain/dataset.types'
-import { distinctKey, isBlank, matchesType, toDate, toNumber } from '@/lib/value-utils'
+import type {
+  ColumnType,
+  DatasetColumn,
+  DatasetRow,
+  DatasetWarning,
+} from '@/domain/dataset.types'
+import {
+  distinctKey,
+  getCategoryLabel,
+  isBlank,
+  matchesType,
+  toDate,
+  toNumber,
+} from '@/lib/value-utils'
 import type { NormalizedHeader } from './data-normalizer.service'
 
 interface InferenceResult {
@@ -101,6 +113,66 @@ export function profileColumn(header: NormalizedHeader, rows: DatasetRow[]): Dat
 
 export function profileColumns(headers: NormalizedHeader[], rows: DatasetRow[]): DatasetColumn[] {
   return headers.map((header) => profileColumn(header, rows))
+}
+
+// Identifier columns ("No Transaksi") can hold hundreds of thousands of distinct
+// values; scanning them for spelling variants costs more than the warning is worth.
+const MAX_LABEL_CHECK_DISTINCT = 1000
+const LABEL_WARNING_PREFIX = 'inconsistent-label-'
+
+function labelKey(label: string): string {
+  return label.trim().toLowerCase().replace(/\s+/g, ' ')
+}
+
+export function detectLabelInconsistencies(
+  columns: DatasetColumn[],
+  rows: DatasetRow[],
+): DatasetWarning[] {
+  const warnings: DatasetWarning[] = []
+
+  for (const column of columns) {
+    if (column.type !== 'text' && column.type !== 'boolean') continue
+    if (column.distinctCount < 2 || column.distinctCount > MAX_LABEL_CHECK_DISTINCT) continue
+
+    const variants = new Map<string, Set<string>>()
+    for (const row of rows) {
+      const value = row[column.id]
+      if (isBlank(value)) continue
+      const label = getCategoryLabel(value)
+      const key = labelKey(label)
+      const seen = variants.get(key)
+      if (seen) seen.add(label)
+      else variants.set(key, new Set([label]))
+    }
+
+    const split = [...variants.values()].filter((labels) => labels.size > 1)
+    if (split.length === 0) continue
+
+    const example = [...split[0]]
+      .slice(0, 2)
+      .map((label) => `"${label}"`)
+      .join(' vs ')
+
+    warnings.push({
+      code: `${LABEL_WARNING_PREFIX}${column.id}`,
+      message: `${column.displayName}: ${split.length} kategori terpecah karena perbedaan huruf besar/kecil atau spasi (contoh: ${example}). Data tidak diubah, kategori tetap dihitung terpisah.`,
+      affectedCount: split.length,
+      severity: 'warning',
+    })
+  }
+
+  return warnings
+}
+
+export function refreshLabelWarnings(
+  warnings: DatasetWarning[],
+  columns: DatasetColumn[],
+  rows: DatasetRow[],
+): DatasetWarning[] {
+  return [
+    ...warnings.filter((warning) => !warning.code.startsWith(LABEL_WARNING_PREFIX)),
+    ...detectLabelInconsistencies(columns, rows),
+  ]
 }
 
 export function withColumnType(

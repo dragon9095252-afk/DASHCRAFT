@@ -10,7 +10,7 @@ import {
 import type { ColumnType, Dataset } from '@/domain/dataset.types'
 import type { Dashboard, DashboardWidget } from '@/domain/dashboard.types'
 import { EMPTY_FILTER_STATE, type ActiveFilterState } from '@/domain/filter.types'
-import { withColumnType } from '@/services/data-profiler.service'
+import { refreshLabelWarnings, withColumnType } from '@/services/data-profiler.service'
 import {
   createDashboardFromDataset,
   duplicateDashboardWidget,
@@ -103,12 +103,14 @@ export function DashboardStoreProvider({ children }: { children: ReactNode }) {
       const current = datasets.find((dataset) => dataset.id === datasetId)
       if (!current) return null
 
+      const columns = current.columns.map((column) =>
+        column.id === columnId ? withColumnType(column, current.rows, type) : column,
+      )
       const updated: Dataset = {
         ...current,
         updatedAt: new Date().toISOString(),
-        columns: current.columns.map((column) =>
-          column.id === columnId ? withColumnType(column, current.rows, type) : column,
-        ),
+        columns,
+        warnings: refreshLabelWarnings(current.warnings, columns, current.rows),
       }
       setDatasets((previous) =>
         previous.map((dataset) => (dataset.id === datasetId ? updated : dataset)),
@@ -125,12 +127,14 @@ export function DashboardStoreProvider({ children }: { children: ReactNode }) {
       const trimmed = displayName.trim()
       if (!trimmed) return current
 
+      const columns = current.columns.map((column) =>
+        column.id === columnId ? { ...column, displayName: trimmed } : column,
+      )
       const updated: Dataset = {
         ...current,
         updatedAt: new Date().toISOString(),
-        columns: current.columns.map((column) =>
-          column.id === columnId ? { ...column, displayName: trimmed } : column,
-        ),
+        columns,
+        warnings: refreshLabelWarnings(current.warnings, columns, current.rows),
       }
       setDatasets((previous) =>
         previous.map((dataset) => (dataset.id === datasetId ? updated : dataset)),
