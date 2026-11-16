@@ -19,7 +19,7 @@ function number(value: number | null, digits = 2): string {
 
 function csv(value: unknown): string {
   const text = value === null || value === undefined ? '' : String(value)
-  const safe = /^[\\s\\uFEFF]*[=+\\-@]/.test(text) ? "'" + text : text
+  const safe = /^[\s\uFEFF]*[=+@-]/.test(text) ? "'" + text : text
   return /[",\\n\\r]/.test(safe) ? '"' + safe.replace(/"/g, '""') + '"' : safe
 }
 
