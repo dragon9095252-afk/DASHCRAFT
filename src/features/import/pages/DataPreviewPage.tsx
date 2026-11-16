@@ -110,16 +110,16 @@ export function DataPreviewPage() {
               Statistical analysis
             </Link>
           </Button>
-          <Button variant="outline" asChild>
+          <Button asChild>
             <Link to={'/analysis/' + dataset.id}>
               <Activity className="size-4" />
-              Analysis Workbench
+              Open Analysis Workbench
             </Link>
           </Button>
           <Button variant="outline" asChild>
             <Link to="/">Ganti file</Link>
           </Button>
-          <Button onClick={handleCreateDashboard}>
+          <Button variant="outline" onClick={handleCreateDashboard}>
             <LayoutDashboard className="size-4" />
             Buat Dashboard
           </Button>
