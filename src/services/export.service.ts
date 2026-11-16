@@ -41,6 +41,18 @@ export function buildCsv(rows: DatasetRow[], columns: DatasetColumn[]): string {
   )
   return '\uFEFF' + [header, ...body].join('\r\n') + '\r\n'
 }
+
+export function sanitizeFileName(name: string): string {
+  const cleaned = name
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, '-')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*-\s*/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^[-. ]+|[-. ]+$/g, '')
+  return cleaned || 'dashboard'
+}
+
 export function buildExportFileName(
   dashboardName: string,
   extension: ExportFormat,

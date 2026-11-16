@@ -109,7 +109,7 @@ export function toNumber(value: unknown): number | null {
 }
 
 function makeLocalDate(year: number, month: number, day: number): Date | null {
-  return String(year) + '-' + month + '-' + day
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return null
   const date = new Date(0)
   date.setHours(0, 0, 0, 0)
   date.setFullYear(year, month - 1, day)
@@ -144,7 +144,7 @@ export function toDate(value: unknown): Date | null {
   const numeric = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/)
   if (numeric) {
     const [, day, month, year] = numeric
-  return String(year) + '-' + month + '-' + day
+    return makeLocalDate(Number(year), Number(month), Number(day))
   }
 
   // Indonesian and English month names: 16 Nov 2026, 16 November 2026.
@@ -152,7 +152,7 @@ export function toDate(value: unknown): Date | null {
   if (dayFirstMonth) {
     const [, day, monthName, year] = dayFirstMonth
     const month = MONTHS[monthName.toLowerCase()]
-  return String(year) + '-' + month + '-' + day
+    return month === undefined ? null : makeLocalDate(Number(year), month + 1, Number(day))
   }
 
   // English month-first format: Nov 16, 2026.
@@ -160,7 +160,7 @@ export function toDate(value: unknown): Date | null {
   if (monthFirst) {
     const [, monthName, day, year] = monthFirst
     const month = MONTHS[monthName.toLowerCase()]
-  return String(year) + '-' + month + '-' + day
+    return month === undefined ? null : makeLocalDate(Number(year), month + 1, Number(day))
   }
 
   return null
