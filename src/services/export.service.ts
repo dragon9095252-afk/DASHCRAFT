@@ -1,3 +1,4 @@
+import type { jsPDF } from 'jspdf'
 import type { DatasetColumn, DatasetRow } from '@/domain/dataset.types'
 import { toNumber } from '@/lib/value-utils'
 
@@ -103,13 +104,15 @@ function loadImageSize(src: string): Promise<{ width: number; height: number }> 
   })
 }
 
-export async function downloadPdfFromImage(
+export async function createDashboardPdf(
   dataUrl: string,
-  fileName: string,
-): Promise<void> {
-  const { jsPDF } = await import('jspdf')
-  const { width, height } = await loadImageSize(dataUrl)
-  const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+  width: number,
+  height: number,
+): Promise<jsPDF> {
+  const { jsPDF: JsPdf } = await import('jspdf')
+  // Without compress, jsPDF embeds the capture as raw RGB — a 2194x2384 dashboard
+  // becomes a 15 MB file instead of ~200 KB.
+  const pdf = new JsPdf({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true })
   const pageWidth = pdf.internal.pageSize.getWidth()
   const pageHeight = pdf.internal.pageSize.getHeight()
   const margin = 10
@@ -133,6 +136,15 @@ export async function downloadPdfFromImage(
     )
   }
 
+  return pdf
+}
+
+export async function downloadPdfFromImage(
+  dataUrl: string,
+  fileName: string,
+): Promise<void> {
+  const { width, height } = await loadImageSize(dataUrl)
+  const pdf = await createDashboardPdf(dataUrl, width, height)
   pdf.save(fileName)
 }
 

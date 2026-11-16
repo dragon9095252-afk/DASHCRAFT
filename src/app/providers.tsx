@@ -8,7 +8,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <TooltipProvider delayDuration={200}>
       <DashboardStoreProvider>
         {children}
-        <Toaster position="top-right" richColors closeButton />
+        {/* Bottom-right keeps toasts clear of the header actions: sonner pauses the
+            dismiss timer while hovered, so a toast over Simpan/Ekspor blocks them. */}
+        <Toaster position="bottom-right" richColors closeButton />
       </DashboardStoreProvider>
     </TooltipProvider>
   )
