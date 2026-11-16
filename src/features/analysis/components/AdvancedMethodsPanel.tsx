@@ -246,10 +246,11 @@ export function AdvancedMethodsPanel({ dataset }: { dataset: Dataset }) {
           </div>
           {model ? (
             <>
-              <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
                 <Metric label="Training rows" value={String(model.trainSize)} />
                 <Metric label="Test rows" value={String(model.testSize)} />
                 <Metric label="Test MAE" value={format(model.mae)} />
+                <Metric label="Test RMSE" value={format(model.rmse)} />
                 <Metric label="Test R²" value={format(model.rSquared)} description="May be negative when predictions underperform the test mean" />
               </div>
               <div className="grid gap-4 xl:grid-cols-2">
