@@ -1,0 +1,37 @@
+﻿Tanggal,No Transaksi,Produk,Kategori,Cabang,Quantity,Revenue,Cost,Salesperson
+2026-01-03,TRX-0001,Laptop Pro,Electronics,Bandung,3,37500000,27000000,Bunga
+2026-01-07,TRX-0002,Monitor 24,Electronics,Surabaya,4,8800000,6000000,Citra
+2026-01-11,TRX-0003,Keyboard,Accessories,Yogyakarta,5,2250000,1100000,Dimas
+2026-01-15,TRX-0004,Mouse Wireless,Accessories,Jakarta,6,1650000,780000,Andi
+2026-01-19,TRX-0005,Office Chair,Furniture,Bandung,7,12950000,8400000,Bunga
+2026-01-23,TRX-0006,Desk Lamp,Furniture,Surabaya,8,3040000,1680000,Citra
+2026-02-04,TRX-0007,Monitor 24,Electronics,Surabaya,5,11000000,7500000,Citra
+2026-02-08,TRX-0008,Keyboard,Accessories,Yogyakarta,6,2700000,1320000,Dimas
+2026-02-12,TRX-0009,Mouse Wireless,Accessories,Jakarta,7,1925000,910000,Andi
+2026-02-16,TRX-0010,Office Chair,Furniture,Bandung,8,14800000,9600000,Bunga
+2026-02-20,TRX-0011,Desk Lamp,Furniture,Surabaya,1,380000,210000,Citra
+2026-02-24,TRX-0012,Laptop Pro,Electronics,Yogyakarta,2,25000000,18000000,Dimas
+2026-03-05,TRX-0013,Keyboard,Accessories,Yogyakarta,7,3150000,1540000,Dimas
+2026-03-09,TRX-0014,Mouse Wireless,Accessories,Jakarta,8,2200000,1040000,Andi
+2026-03-13,TRX-0015,Office Chair,Furniture,Bandung,1,1850000,1200000,Bunga
+2026-03-17,TRX-0016,Desk Lamp,Furniture,Surabaya,2,760000,420000,Citra
+2026-03-21,TRX-0017,Laptop Pro,Electronics,Yogyakarta,3,37500000,27000000,Dimas
+2026-03-25,TRX-0018,Monitor 24,Electronics,Jakarta,4,8800000,6000000,Andi
+2026-04-06,TRX-0019,Mouse Wireless,Accessories,Jakarta,1,275000,130000,Andi
+2026-04-10,TRX-0020,Office Chair,Furniture,Bandung,2,3700000,2400000,Bunga
+2026-04-14,TRX-0021,Desk Lamp,Furniture,Surabaya,3,1140000,630000,Citra
+2026-04-18,TRX-0022,Laptop Pro,Electronics,Yogyakarta,4,50000000,36000000,Dimas
+2026-04-22,TRX-0023,Monitor 24,Electronics,Jakarta,5,11000000,7500000,Andi
+2026-04-26,TRX-0024,Keyboard,Accessories,Bandung,6,2700000,1320000,Bunga
+2026-05-07,TRX-0025,Office Chair,Furniture,Bandung,3,5550000,3600000,Bunga
+2026-05-11,TRX-0026,Desk Lamp,Furniture,Surabaya,4,1520000,840000,Citra
+2026-05-15,TRX-0027,Laptop Pro,Electronics,Yogyakarta,5,62500000,45000000,Dimas
+2026-05-19,TRX-0028,Monitor 24,Electronics,Jakarta,6,13200000,9000000,Andi
+2026-05-23,TRX-0029,Keyboard,Accessories,Bandung,7,3150000,1540000,Bunga
+2026-05-02,TRX-0030,Mouse Wireless,Accessories,Surabaya,8,2200000,1040000,Citra
+2026-06-08,TRX-0031,Desk Lamp,Furniture,Surabaya,5,1900000,1050000,Citra
+2026-06-12,TRX-0032,Laptop Pro,Electronics,Yogyakarta,6,75000000,54000000,Dimas
+2026-06-16,TRX-0033,Monitor 24,Electronics,Jakarta,7,15400000,10500000,Andi
+2026-06-20,TRX-0034,Keyboard,Accessories,Bandung,8,3600000,1760000,Bunga
+2026-06-24,TRX-0035,Mouse Wireless,Accessories,Surabaya,1,275000,130000,Citra
+2026-06-03,TRX-0036,Office Chair,Furniture,Yogyakarta,2,3700000,2400000,Dimas
