@@ -444,7 +444,7 @@ export function trainPredictiveRegression(
 
   const samples = dataset.rows.flatMap((row) => {
     const target = toNumber(row[targetColumnId])
-    return target === null ? [] : [{ index, target, features: numericColumns.map((column) => toNumber(row[column.id])) }]
+    return target === null ? [] : [{ target, features: numericColumns.map((column) => toNumber(row[column.id])) }]
   })
   if (samples.length < 12) return null
 
