@@ -4,13 +4,14 @@ import type { KpiWidgetConfig } from '@/domain/dashboard.types'
 import { Card } from '@/components/ui/card'
 import { formatNumber } from '@/lib/formatters'
 import { cn } from '@/lib/utils'
-import { computeMetric, getAggregationLabel } from '@/services/aggregation.service'
+import { computeMetric, getAggregationLabel, getRowCountScopeLabel } from '@/services/aggregation.service'
 import { findDatasetColumn, validateKpiConfig } from '@/services/widget-validation'
 import { WidgetMenu } from './WidgetMenu'
 
 export function KpiCard({
   widget,
   rows,
+  totalRowCount,
   columns,
   selected,
   onSelect,
@@ -24,6 +25,7 @@ export function KpiCard({
 }: {
   widget: KpiWidgetConfig
   rows: DatasetRow[]
+  totalRowCount: number
   columns: DatasetColumn[]
   selected: boolean
   onSelect: () => void
@@ -39,7 +41,9 @@ export function KpiCard({
   const problems = validateKpiConfig(widget, columns)
   const value = problems.length === 0 ? computeMetric(rows, widget.metric, field) : 0
   const metricLabel = getAggregationLabel(widget.metric)
-  const subtitle = field ? `${metricLabel} · ${field.displayName}` : `${metricLabel} · semua baris`
+  const subtitle = field
+    ? `${metricLabel} · ${field.displayName}`
+    : `${metricLabel} · ${getRowCountScopeLabel(rows.length, totalRowCount)}`
 
   return (
     <Card

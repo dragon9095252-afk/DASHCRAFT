@@ -160,3 +160,7 @@ export function getAggregationLabel(aggregation: Aggregation): string {
       return aggregation
   }
 }
+
+export function getRowCountScopeLabel(rowCount: number, totalRowCount: number): string {
+  return rowCount === totalRowCount ? 'semua baris' : `${rowCount} dari ${totalRowCount} baris`
+}

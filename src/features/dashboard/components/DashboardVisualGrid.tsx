@@ -8,6 +8,7 @@ interface DashboardVisualGridProps {
   chartWidgets: ChartWidgetConfig[]
   columns: DatasetColumn[]
   rows: DatasetRow[]
+  totalRowCount: number
   selectedWidgetId: string | null
   onSelect: (widgetId: string) => void
   onDuplicate: (widgetId: string) => void
@@ -20,6 +21,7 @@ export function DashboardVisualGrid({
   chartWidgets,
   columns,
   rows,
+  totalRowCount,
   selectedWidgetId,
   onSelect,
   onDuplicate,
@@ -35,6 +37,7 @@ export function DashboardVisualGrid({
               key={widget.id}
               widget={widget}
               rows={rows}
+              totalRowCount={totalRowCount}
               columns={columns}
               selected={selectedWidgetId === widget.id}
               onSelect={() => onSelect(widget.id)}

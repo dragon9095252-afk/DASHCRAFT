@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { DatasetColumn, DatasetRow, DateGroup } from '@/domain/dataset.types'
-import { aggregateSeries, computeMetric } from '@/services/aggregation.service'
+import { aggregateSeries, computeMetric, getRowCountScopeLabel } from '@/services/aggregation.service'
 
 function column(overrides: Partial<DatasetColumn>): DatasetColumn {
   return {
@@ -150,5 +150,16 @@ describe('date group labels', () => {
 
     expect(result.points).toHaveLength(1)
     expect(result.points[0].value).toBe(35)
+  })
+})
+
+describe('count KPI scope label', () => {
+  it('says semua baris only when nothing is filtered out', () => {
+    expect(getRowCountScopeLabel(5, 5)).toBe('semua baris')
+  })
+
+  it('reports the filtered share instead of claiming all rows', () => {
+    expect(getRowCountScopeLabel(1, 5)).toBe('1 dari 5 baris')
+    expect(getRowCountScopeLabel(0, 5)).toBe('0 dari 5 baris')
   })
 })

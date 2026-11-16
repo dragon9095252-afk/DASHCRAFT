@@ -133,6 +133,7 @@ export function DashboardBuilderPage() {
             chartWidgets={workspace.chartWidgets}
             columns={dataset.columns}
             rows={workspace.filteredRows}
+            totalRowCount={dataset.rows.length}
             selectedWidgetId={workspace.selectedWidgetId}
             onSelect={workspace.openEditor}
             onDuplicate={workspace.duplicateWidget}
