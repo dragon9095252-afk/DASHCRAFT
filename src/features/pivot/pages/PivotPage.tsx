@@ -90,7 +90,7 @@ export function PivotPage() {
   }, [dataset, configuration])
 
   if (status === 'loading') return <PageContainer><LoadingState label="Memuat dataset…" /></PageContainer>
-  if (!dataset) return <PageContainer><EmptyState title="Dataset tidak ditemukan" description="Impor dataset terlebih dahulu untuk membuat pivot table." /></PageContainer>
+  if (!dataset) return <PageContainer><EmptyState icon={Table2} title="Dataset tidak ditemukan" description="Impor dataset terlebih dahulu untuk membuat pivot table." /></PageContainer>
 
   const updateDimension = (axis: 'row' | 'column', fieldId: string, checked: boolean) => {
     if (axis === 'row') {

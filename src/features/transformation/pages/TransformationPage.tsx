@@ -99,7 +99,7 @@ export function TransformationPage() {
   if (!dataset) {
     return (
       <PageContainer>
-        <EmptyState title="Dataset tidak ditemukan" description="Impor dataset terlebih dahulu untuk memulai transformasi." />
+        <EmptyState icon={SlidersHorizontal} title="Dataset tidak ditemukan" description="Impor dataset terlebih dahulu untuk memulai transformasi." />
       </PageContainer>
     )
   }

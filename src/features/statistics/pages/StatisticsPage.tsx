@@ -52,7 +52,7 @@ export function StatisticsPage() {
   if (!dataset || !analysis) {
     return (
       <PageContainer>
-        <EmptyState title="Dataset tidak ditemukan" description="Impor dataset terlebih dahulu untuk menjalankan analisis statistik." />
+        <EmptyState icon={Activity} title="Dataset tidak ditemukan" description="Impor dataset terlebih dahulu untuk menjalankan analisis statistik." />
       </PageContainer>
     )
   }

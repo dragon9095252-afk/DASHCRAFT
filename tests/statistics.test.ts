@@ -25,7 +25,7 @@ function fixture(): Dataset {
       { sales: 20, cost: 40, reverse: 90, constant: 5, region: 'East' },
       { sales: 30, cost: 60, reverse: 80, constant: 5, region: 'West' },
       { sales: 40, cost: 80, reverse: 70, constant: 5, region: 'West' },
-      { sales: 100, cost: 200, reverse: 60, constant: 5, region: 'East' },
+      { sales: 100, cost: 200, reverse: 10, constant: 5, region: 'East' },
       { sales: null, cost: 10, reverse: 50, constant: 5, region: 'West' },
       { sales: 'not-a-number', cost: 5, reverse: 40, constant: 5, region: 'East' },
     ],

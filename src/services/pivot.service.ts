@@ -53,6 +53,14 @@ function findColumn(columns: DatasetColumn[], id: string): DatasetColumn {
   return column
 }
 
+function normalizeDimensionValue(value: unknown, column: DatasetColumn): unknown {
+  if (isBlank(value)) return value
+  if (column.type === 'boolean') return toBoolean(value) ?? value
+  if (column.type === 'number') return toNumber(value) ?? value
+  if (column.type === 'date') return toDate(value) ?? value
+  return value
+}
+
 function compareValues(left: unknown, right: unknown, column: DatasetColumn): number {
   if (column.type === 'number') {
     const a = toNumber(left)
@@ -112,9 +120,14 @@ function filterRows(rows: DatasetRow[], dataset: Dataset, config: PivotConfigura
   const filters = config.filters ?? []
   for (const filter of filters) findColumn(dataset.columns, filter.columnId)
   return rows.filter((row) => filters.every((filter) => {
-    const key = distinctKey(row[filter.columnId])
-    if (filter.includeValues?.length && !filter.includeValues.some((value) => distinctKey(value) === key)) return false
-    if (filter.excludeValues?.some((value) => distinctKey(value) === key)) return false
+    const column = findColumn(dataset.columns, filter.columnId)
+    const key = distinctKey(normalizeDimensionValue(row[filter.columnId], column))
+    if (filter.includeValues?.length && !filter.includeValues.some((value) =>
+      distinctKey(normalizeDimensionValue(value, column)) === key,
+    )) return false
+    if (filter.excludeValues?.some((value) =>
+      distinctKey(normalizeDimensionValue(value, column)) === key,
+    )) return false
     return true
   }))
 }
@@ -145,15 +158,15 @@ function buildAxisBuckets(
     return buckets
   }
 
+  const fields = fieldIds.map((id) => findColumn(columns, id))
   for (const row of rows) {
-    const values = fieldIds.map((id) => row[id])
+    const values = fields.map((column) => normalizeDimensionValue(row[column.id], column))
     const key = pathKey(values)
     const existing = buckets.get(key)
     if (existing) existing.rows.push(row)
     else buckets.set(key, { key, values, labels: values.map(label), rows: [row], level: values.length })
   }
 
-  const fields = fieldIds.map((id) => findColumn(columns, id))
   return new Map([...buckets.entries()].sort(([, left], [, right]) => {
     for (let index = 0; index < fields.length; index += 1) {
       const result = compareValues(left.values[index], right.values[index], fields[index])
@@ -175,8 +188,9 @@ function buildRowBuckets(
   }
 
   const buckets = new Map<string, GroupBucket>()
+  const fields = fieldIds.map((id) => findColumn(columns, id))
   for (const row of rows) {
-    const values = fieldIds.map((id) => row[id])
+    const values = fields.map((column) => normalizeDimensionValue(row[column.id], column))
     const firstDepth = subtotals ? 1 : values.length
     for (let depth = firstDepth; depth <= values.length; depth += 1) {
       const path = values.slice(0, depth)
@@ -187,7 +201,6 @@ function buildRowBuckets(
     }
   }
 
-  const fields = fieldIds.map((id) => findColumn(columns, id))
   return new Map([...buckets.entries()].sort(([, left], [, right]) => {
     const sharedLength = Math.min(left.values.length, right.values.length)
     for (let index = 0; index < sharedLength; index += 1) {
