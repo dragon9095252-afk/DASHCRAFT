@@ -32,9 +32,11 @@ npm run dev
 
 - Profiling per kolom: nilai valid, kosong, tidak valid, distinct, frekuensi kategori, statistik numerik, dan outlier berbasis IQR.
 - Deteksi baris duplikat dan ringkasan kualitas data berbasis heuristik.
-- Korelasi Pearson dan model regresi linear satu prediktor untuk eksplorasi hubungan.
-- Segmentasi K-means untuk baris lengkap dengan setidaknya dua fitur numerik.
-- Semua hasil bersifat deskriptif dan tidak mengubah sumber. Korelasi bukan sebab-akibat; anomali perlu ditinjau manusia.
+- Korelasi Pearson, regresi linear eksploratif, dan segmentasi K-means.
+- Inferensi statistik: Welch two-sample t-test dengan p-value dua sisi dan confidence interval 95%, serta chi-square independence untuk dua field kategorikal.
+- Forecast deret waktu dengan Holt linear trend, holdout kronologis, MAE, RMSE, dan MAPE.
+- Predictive ridge regression dengan pemisahan train/test deterministik, imputasi mean berbasis training data, standardisasi, MAE/RMSE/R², dan koefisien.
+- Semua hasil bersifat eksploratif dan tidak mengubah sumber. Korelasi bukan sebab-akibat; model tidak menjamin prediksi; asumsi uji statistik perlu diperiksa manusia.
 
 ## Penyimpanan dan ekspor
 
