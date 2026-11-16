@@ -17,9 +17,9 @@ function number(value: number | null, digits = 2): string {
   return new Intl.NumberFormat('id-ID', { maximumFractionDigits: digits }).format(value)
 }
 
-function csv(value: unknown): string {
+function csv(value: unknown, forceText = typeof value === 'string'): string {
   const text = value === null || value === undefined ? '' : String(value)
-  const safe = /^[\s\uFEFF]*[=+@-]/.test(text) ? "'" + text : text
+  const safe = forceText && /^[\s\uFEFF]*[=+@-]/.test(text) ? "'" + text : text
   return /[",\\n\\r]/.test(safe) ? '"' + safe.replace(/"/g, '""') + '"' : safe
 }
 
@@ -165,6 +165,7 @@ export function AnalysisWorkbenchPage() {
                 <th className="px-3 py-3 text-right font-medium">Distinct</th>
                 <th className="px-3 py-3 text-right font-medium">Mean</th>
                 <th className="px-3 py-3 text-right font-medium">Median</th>
+                <th className="px-3 py-3 text-right font-medium">Q1 / Q3</th>
                 <th className="px-3 py-3 text-right font-medium">Min / Max</th>
                 <th className="px-4 py-3 text-left font-medium">Most frequent values</th>
               </tr>
@@ -182,6 +183,7 @@ export function AnalysisWorkbenchPage() {
                   <td className="px-3 py-3 text-right tabular-nums">{column.distinctCount}<p className="text-[10px] text-muted-foreground">{number(column.uniquenessRate * 100, 1)}% unique</p></td>
                   <td className="px-3 py-3 text-right tabular-nums">{number(column.mean)}</td>
                   <td className="px-3 py-3 text-right tabular-nums">{number(column.median)}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{number(column.q1)} / {number(column.q3)}</td>
                   <td className="px-3 py-3 text-right tabular-nums">{number(column.min)} / {number(column.max)}{column.outlierCount > 0 ? <p className="text-[10px] text-warning">{column.outlierCount} IQR outliers</p> : null}</td>
                   <td className="px-4 py-3">
                     <div className="flex max-w-[260px] flex-wrap gap-1">
