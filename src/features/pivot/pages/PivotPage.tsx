@@ -41,7 +41,7 @@ export function PivotPage() {
 
   useEffect(() => {
     if (!dataset) return
-    const dimensions = dataset.columns.filter((column) => column.type === 'text' || column.type === 'boolean')
+    const dimensions = dataset.columns.filter((column) => column.type === 'text' || column.type === 'boolean' || column.type === 'date')
     const measures = dataset.columns.filter((column) => column.type === 'number')
     setRowFieldIds((current) => current.length ? current : dimensions.slice(0, 1).map((column) => column.id))
     setColumnFieldIds((current) => current.length ? current : dimensions.slice(1, 2).map((column) => column.id))
@@ -139,7 +139,7 @@ export function PivotPage() {
 
   const dimensionColumns = dataset.columns.filter((column) => column.type === 'text' || column.type === 'boolean')
   const numericColumns = dataset.columns.filter((column) => column.type === 'number')
-  const valueColumns = aggregation === 'count' ? dataset.columns : numericColumns
+  const valueColumns = aggregation === 'count' || aggregation === 'distinctCount' ? dataset.columns : numericColumns
 
   return (
     <PageContainer wide>
@@ -188,16 +188,23 @@ export function PivotPage() {
             <div className="mb-3 flex items-center gap-2"><SlidersHorizontal className="size-4 text-brand" /><h2 className="text-sm font-semibold">Values & filters</h2></div>
             <div className="space-y-3">
               <div className="space-y-1.5"><label className="text-xs font-medium">Aggregation</label>
-                <Select value={aggregation} onValueChange={(value) => setAggregation(value as PivotAggregation)}>
+                <Select value={aggregation} onValueChange={(value) => {
+                  const next = value as PivotAggregation
+                  setAggregation(next)
+                  if (next === 'count') setMeasureFieldId('')
+                }}>
                   <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                   <SelectContent>{AGGREGATIONS.map((item) => <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               {aggregation !== 'count' || valueColumns.length ? (
                 <div className="space-y-1.5"><label className="text-xs font-medium">Value field</label>
-                  <Select value={measureFieldId} onValueChange={setMeasureFieldId}>
+                  <Select value={aggregation === 'count' && !measureFieldId ? '__all_rows__' : measureFieldId} onValueChange={(value) => setMeasureFieldId(value === '__all_rows__' ? '' : value)}>
                     <SelectTrigger className="w-full"><SelectValue placeholder="Choose value field" /></SelectTrigger>
-                    <SelectContent>{valueColumns.map((column) => <SelectItem key={column.id} value={column.id}>{column.displayName}</SelectItem>)}</SelectContent>
+                    <SelectContent>
+                      {aggregation === 'count' ? <SelectItem value="__all_rows__">All rows</SelectItem> : null}
+                      {valueColumns.map((column) => <SelectItem key={column.id} value={column.id}>{column.displayName}</SelectItem>)}
+                    </SelectContent>
                   </Select>
                 </div>
               ) : null}
