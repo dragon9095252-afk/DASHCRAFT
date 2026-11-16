@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import {
   Activity, BarChart3, BrainCircuit, CalendarClock, FlaskConical,
-  Info, LineChart, Target,
+  Info,
 } from 'lucide-react'
 import type { Dataset } from '@/domain/dataset.types'
 import {
@@ -263,7 +263,7 @@ export function AdvancedMethodsPanel({ dataset }: { dataset: Dataset }) {
                 <div className="rounded-lg border p-3">
                   <h4 className="text-xs font-semibold">Holdout predictions</h4>
                   <div className="mt-2 max-h-48 space-y-2 overflow-auto">
-                    {model.predictions.slice(0, 12).map((item, index) => <div key={index} className="flex justify-between gap-3 text-xs"><span className="text-muted-foreground">Actual {format(item.actual)}</span><span className="font-mono tabular-nums">Predicted {format(item.predicted)}</span></div>)}
+                    {model.predictions.slice(0, 12).map((item, index) => <div key={item.actual + '-' + index} className="flex justify-between gap-3 text-xs"><span className="text-muted-foreground">Actual {format(item.actual)}</span><span className="font-mono tabular-nums">Predicted {format(item.predicted)}</span></div>)}
                   </div>
                 </div>
               </div>
