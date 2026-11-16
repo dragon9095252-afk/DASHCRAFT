@@ -347,8 +347,10 @@ export function analyzeAdvancedDataset(dataset: Dataset): AdvancedAnalyticsRepor
       const result = correlation(dataset.rows, numericColumns[left], numericColumns[right])
       if (result) {
         correlations.push(result)
-        const model = regression(dataset.rows, numericColumns[left], numericColumns[right])
-        if (model) regressions.push(model)
+        const forwardModel = regression(dataset.rows, numericColumns[left], numericColumns[right])
+        const reverseModel = regression(dataset.rows, numericColumns[right], numericColumns[left])
+        if (forwardModel) regressions.push(forwardModel)
+        if (reverseModel) regressions.push(reverseModel)
       }
     }
   }
