@@ -22,7 +22,7 @@ export function formatCsvValue(value: unknown): string {
 
 function csvEscape(value: string, forceText = false): string {
   // Quoting alone does not stop spreadsheet formula execution.
-  const formulaLike = /^[\u0000-\u0020\uFEFF]*[=+\-@]/.test(value)
+  const formulaLike = /^[\s\uFEFF]*[=+\-@]/.test(value)
   const safeValue = formulaLike && (forceText || toNumber(value) === null) ? "'" + value : value
   if (/[",\n\r]/.test(safeValue)) {
     return '"' + safeValue.replace(/"/g, '""') + '"'
