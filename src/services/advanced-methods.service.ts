@@ -442,7 +442,7 @@ export function trainPredictiveRegression(
   ).slice(0, 8)
   if (!numericColumns.length) return null
 
-  const samples = dataset.rows.flatMap((row, index) => {
+  const samples = dataset.rows.flatMap((row) => {
     const target = toNumber(row[targetColumnId])
     return target === null ? [] : [{ index, target, features: numericColumns.map((column) => toNumber(row[column.id])) }]
   })
