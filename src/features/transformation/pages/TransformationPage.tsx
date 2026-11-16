@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatCellValue } from '@/lib/formatters'
+import { toBoolean, toDate, toNumber } from '@/lib/value-utils'
 import { datasetRepository } from '@/db/repositories/dataset.repository'
 import { useDashboardStore } from '@/state/dashboard-store'
 import { useStoredDataset } from '@/features/import/hooks/useStoredDataset'
@@ -124,15 +125,20 @@ export function TransformationPage() {
       case 'change-column-type':
         step = { ...base, type: 'change-column-type', columnId: selectedColumn.id, targetType }
         break
-      case 'fill-missing':
+      case 'fill-missing': {
+        let replacement: unknown = fillValue
+        if (selectedColumn.type === 'number') replacement = toNumber(fillValue) ?? fillValue
+        if (selectedColumn.type === 'date') replacement = toDate(fillValue) ?? fillValue
+        if (selectedColumn.type === 'boolean') replacement = toBoolean(fillValue) ?? fillValue
         step = {
           ...base,
           type: 'fill-missing',
           columnIds: [selectedColumn.id],
           strategy: fillStrategy,
-          ...(fillStrategy === 'value' ? { value: fillValue } : {}),
+          ...(fillStrategy === 'value' ? { value: replacement } : {}),
         }
         break
+      }
       case 'remove-columns':
         step = { ...base, type: 'remove-columns', columnIds: [selectedColumn.id] }
         break
