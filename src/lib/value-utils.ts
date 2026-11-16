@@ -196,9 +196,7 @@ export function matchesType(value: unknown, type: ColumnType): boolean {
 
 export function getCategoryLabel(value: unknown): string {
   if (isBlank(value)) return BLANK_CATEGORY_LABEL
-  if (value instanceof Date) {
-    return value.toISOString().slice(0, 10)
-  }
+  if (value instanceof Date) return getDateBucket(value, 'day')
   return String(value)
 }
 
