@@ -95,9 +95,9 @@ function ColumnProfileItem({
             <span
               key={index}
               className="max-w-[140px] truncate rounded border bg-secondary/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
-              title={formatCellValue(value)}
+              title={formatCellValue(value, column.type)}
             >
-              {formatCellValue(value)}
+              {formatCellValue(value, column.type)}
             </span>
           ))}
         </div>

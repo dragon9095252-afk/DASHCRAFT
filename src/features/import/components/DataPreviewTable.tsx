@@ -53,7 +53,7 @@ export function DataPreviewTable({ dataset }: { dataset: Dataset }) {
                 </TableCell>
                 {dataset.columns.map((column) => {
                   const value = row[column.id]
-                  const text = formatCellValue(value)
+                  const text = formatCellValue(value, column.type)
                   return (
                     <TableCell
                       key={column.id}

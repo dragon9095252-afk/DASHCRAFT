@@ -3,6 +3,7 @@ import path from 'node:path'
 import { beforeAll, describe, expect, it } from 'vitest'
 import type { Dataset, DatasetColumn } from '@/domain/dataset.types'
 import type { ActiveFilterState } from '@/domain/filter.types'
+import { toDate } from '@/lib/value-utils'
 import { aggregateSeries, computeMetric } from '@/services/aggregation.service'
 import { normalizeSheet } from '@/services/data-normalizer.service'
 import { buildDataset, parseWorkbook } from '@/services/file-import.service'
@@ -57,7 +58,8 @@ describe('impor dan profiling data contoh', () => {
     expect(column('Cost').type).toBe('number')
     expect(column('Cabang').type).toBe('text')
     expect(column('No Transaksi').type).toBe('text')
-    expect(dataset.rows[0][column('Tanggal').id]).toBeInstanceOf(Date)
+    expect(dataset.rows[0][column('Tanggal').id]).toBe('2026-01-03')
+    expect(toDate(dataset.rows[0][column('Tanggal').id])?.getDate()).toBe(3)
   })
 
   it('menghitung nilai unik kategori sesuai referensi', () => {

@@ -1,5 +1,6 @@
-import type { DateGroup } from '@/domain/dataset.types'
+import type { ColumnType, DateGroup } from '@/domain/dataset.types'
 import type { NumberFormat } from '@/domain/dashboard.types'
+import { toDate, toNumber } from '@/lib/value-utils'
 
 const numberFormatter = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 })
 const integerFormatter = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 })
@@ -50,11 +51,21 @@ export function formatDateValue(value: Date): string {
   }).format(value)
 }
 
-export function formatCellValue(value: unknown): string {
+export function formatCellValue(value: unknown, type?: ColumnType): string {
   if (value === null || value === undefined) return ''
   if (value instanceof Date) return formatDateValue(value)
   if (typeof value === 'number') return numberFormatter.format(value)
   if (typeof value === 'boolean') return value ? 'Ya' : 'Tidak'
+  if (typeof value === 'string') {
+    if (type === 'number') {
+      const parsed = toNumber(value)
+      if (parsed !== null) return numberFormatter.format(parsed)
+    }
+    if (type === 'date') {
+      const parsed = toDate(value)
+      if (parsed) return formatDateValue(parsed)
+    }
+  }
   return String(value)
 }
 

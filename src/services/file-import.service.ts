@@ -62,7 +62,15 @@ export async function parseWorkbook(file: File): Promise<XLSX.WorkBook> {
 
   let workbook: XLSX.WorkBook
   try {
-    workbook = XLSX.read(buffer, { type: 'array', cellDates: true })
+    // SheetJS guesses CSV cell types with US locale and Excel formula rules, which
+    // turns "1.234" into 1.234, "03/01/2026" into 1 March, and "=1+1" into a
+    // valueless formula. Keep CSV cells as text so the Indonesian-aware profiler
+    // decides the type. XLSX/XLS already carry real cell types and ignore this.
+    workbook = XLSX.read(buffer, {
+      type: 'array',
+      cellDates: true,
+      raw: getFileType(file.name) === 'csv',
+    })
   } catch {
     throw new ImportError(
       'corrupted-file',
