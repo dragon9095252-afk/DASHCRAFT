@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   Activity, AlertTriangle, ArrowLeft, BrainCircuit, CheckCircle2, Download,
-  Gauge, GitBranch, Layers3, Network, RefreshCw, ShieldCheck, Sparkles,
+  Gauge, GitBranch, Layers3, Network, ShieldCheck, Sparkles,
 } from 'lucide-react'
 import { PageContainer } from '@/components/layout/PageContainer'
 import { EmptyState } from '@/components/common/EmptyState'
@@ -33,10 +33,9 @@ const severityStyle = {
 export function AnalysisWorkbenchPage() {
   const { datasetId } = useParams<{ datasetId: string }>()
   const { dataset, status } = useStoredDataset(datasetId)
-  const [revision, setRevision] = useState(0)
   const report = useMemo(
     () => dataset ? analyzeAdvancedDataset(dataset) : null,
-    [dataset, revision],
+    [dataset],
   )
 
   if (status === 'loading') {
@@ -99,9 +98,6 @@ export function AnalysisWorkbenchPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
-            <RefreshCw className="size-4" /> Run again
-          </Button>
           <Button onClick={exportReport}><Download className="size-4" /> Export profile CSV</Button>
         </div>
       </div>
