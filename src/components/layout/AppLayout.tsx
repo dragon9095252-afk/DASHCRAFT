@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import { LineChart, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { LoadingState } from '@/components/common/LoadingState'
 import { AppSidebar, AppSidebarContent } from './AppSidebar'
 
 export function AppLayout() {
@@ -34,7 +35,9 @@ export function AppLayout() {
         </header>
 
         <main>
-          <Outlet />
+          <Suspense fallback={<LoadingState label="Memuat halaman…" />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

@@ -1,11 +1,29 @@
+import { lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { HomePage } from '@/features/home/pages/HomePage'
-import { DataPreviewPage } from '@/features/import/pages/DataPreviewPage'
-import { DashboardBuilderPage } from '@/features/dashboard/pages/DashboardBuilderPage'
-import { DashboardsPage } from '@/features/dashboards/pages/DashboardsPage'
-import { SettingsPage } from '@/features/settings/pages/SettingsPage'
 import { NotFoundPage } from './NotFoundPage'
+
+const DataPreviewPage = lazy(() =>
+  import('@/features/import/pages/DataPreviewPage').then((module) => ({
+    default: module.DataPreviewPage,
+  })),
+)
+const DashboardBuilderPage = lazy(() =>
+  import('@/features/dashboard/pages/DashboardBuilderPage').then((module) => ({
+    default: module.DashboardBuilderPage,
+  })),
+)
+const DashboardsPage = lazy(() =>
+  import('@/features/dashboards/pages/DashboardsPage').then((module) => ({
+    default: module.DashboardsPage,
+  })),
+)
+const SettingsPage = lazy(() =>
+  import('@/features/settings/pages/SettingsPage').then((module) => ({
+    default: module.SettingsPage,
+  })),
+)
 
 export function AppRouter() {
   return (
