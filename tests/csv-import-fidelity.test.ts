@@ -114,7 +114,7 @@ describe('XLSX import keeps native cell types', () => {
     })
 
     const parsed = await parseWorkbook(file)
-    const dataset = buildDataset({ workbook: parsed, fileName: file.name, fileType: 'xlsx' })
+    const dataset = await buildDataset({ workbook: parsed, fileName: file.name, fileType: 'xlsx' })
 
     expect(dataset.rows[0].col_0).toBe(1234.5)
     expect(dataset.rows[1].col_0).toBe(0.25)
@@ -135,7 +135,7 @@ describe('XLSX import keeps native cell types', () => {
     })
 
     const parsed = await parseWorkbook(file)
-    const dataset = buildDataset({ workbook: parsed, fileName: file.name, fileType: 'xlsx' })
+    const dataset = await buildDataset({ workbook: parsed, fileName: file.name, fileType: 'xlsx' })
 
     // SheetJS >=0.20 stores date cells as UTC and relies on sheet_to_json to map
     // them back to local wall-clock time. Losing that step shifts the day by the

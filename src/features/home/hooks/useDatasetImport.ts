@@ -28,13 +28,13 @@ export function useDatasetImport() {
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState<PendingImport | null>(null)
 
-  function finalizeImport(
+  async function finalizeImport(
     file: File,
     workbook: WorkBook,
     fileType: SourceFileType,
     sheetName: string | undefined,
   ) {
-    const dataset = buildDataset({
+    const dataset = await buildDataset({
       workbook,
       fileName: file.name,
       fileType,
@@ -67,7 +67,7 @@ export function useDatasetImport() {
         return
       }
 
-      finalizeImport(file, workbook, fileType, sheets[0])
+      await finalizeImport(file, workbook, fileType, sheets[0])
     } catch (caught) {
       const message =
         caught instanceof ImportError
@@ -80,12 +80,12 @@ export function useDatasetImport() {
     }
   }
 
-  function confirmSheet(sheetName: string) {
+  async function confirmSheet(sheetName: string) {
     if (!pending) return
     const { file, workbook, fileType } = pending
     setPending(null)
     try {
-      finalizeImport(file, workbook, fileType, sheetName)
+      await finalizeImport(file, workbook, fileType, sheetName)
     } catch (caught) {
       const message =
         caught instanceof ImportError

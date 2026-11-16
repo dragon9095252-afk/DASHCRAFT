@@ -35,7 +35,7 @@ beforeAll(async () => {
   const buffer = await readFile(CSV_PATH)
   const file = new File([buffer], 'sales_sample.csv', { type: 'text/csv' })
   const workbook = await parseWorkbook(file)
-  dataset = buildDataset({
+  dataset = await buildDataset({
     workbook,
     fileName: file.name,
     fileType: 'csv',
