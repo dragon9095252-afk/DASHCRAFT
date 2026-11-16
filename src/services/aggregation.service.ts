@@ -5,7 +5,14 @@ import type {
   DateGroup,
 } from '@/domain/dataset.types'
 import { formatDateForGroup } from '@/lib/formatters'
-import { getCategoryLabel, getDateBucket, toDate, toNumber } from '@/lib/value-utils'
+import {
+  distinctKey,
+  getCategoryLabel,
+  getDateBucket,
+  isBlank,
+  toDate,
+  toNumber,
+} from '@/lib/value-utils'
 
 export interface AggregatedPoint {
   key: string
@@ -40,8 +47,8 @@ export function computeMetric(
     const seen = new Set<string>()
     for (const row of rows) {
       const value = row[field.id]
-      if (value === null || value === undefined || value === '') continue
-      seen.add(value instanceof Date ? value.toISOString() : String(value))
+      if (isBlank(value)) continue
+      seen.add(distinctKey(value))
     }
     return seen.size
   }
@@ -53,15 +60,16 @@ export function computeMetric(
   }
   if (numbers.length === 0) return 0
 
+  // Spreading numbers into Math.min/max overflows the call stack past ~125k rows.
   switch (aggregation) {
     case 'sum':
       return numbers.reduce((total, value) => total + value, 0)
     case 'average':
       return numbers.reduce((total, value) => total + value, 0) / numbers.length
     case 'min':
-      return Math.min(...numbers)
+      return numbers.reduce((lowest, value) => (value < lowest ? value : lowest), numbers[0])
     case 'max':
-      return Math.max(...numbers)
+      return numbers.reduce((highest, value) => (value > highest ? value : highest), numbers[0])
     default:
       return 0
   }
@@ -77,23 +85,24 @@ export function aggregateSeries(
   for (const row of rows) {
     const rawValue = row[categoryField.id]
     let key: string
-    let label: string
+    let date: Date | null = null
 
     if (categoryField.type === 'date') {
-      const date = toDate(rawValue)
+      date = toDate(rawValue)
       if (!date) continue
       key = getDateBucket(date, dateGroup)
-      label = formatDateForGroup(date, dateGroup)
     } else {
-      label = getCategoryLabel(rawValue)
-      key = label
+      key = getCategoryLabel(rawValue)
     }
 
     const group = groups.get(key)
     if (group) {
       group.rows.push(row)
     } else {
-      groups.set(key, { label, rows: [row] })
+      groups.set(key, {
+        label: date ? formatDateForGroup(date, dateGroup) : key,
+        rows: [row],
+      })
     }
   }
 

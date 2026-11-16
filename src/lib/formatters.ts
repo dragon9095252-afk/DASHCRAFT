@@ -8,6 +8,18 @@ const compactFormatter = new Intl.NumberFormat('id-ID', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const yearFormatter = new Intl.DateTimeFormat('id-ID', { year: 'numeric' })
+const monthFormatter = new Intl.DateTimeFormat('id-ID', { month: 'short', year: 'numeric' })
+const dayGroupFormatter = new Intl.DateTimeFormat('id-ID', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+})
+const dateFormatter = new Intl.DateTimeFormat('id-ID', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+})
 
 export function formatNumber(value: number, format: NumberFormat = 'default'): string {
   if (!Number.isFinite(value)) return '–'
@@ -30,25 +42,13 @@ export function formatCompactNumber(value: number): string {
 }
 
 export function formatDateForGroup(date: Date, group: DateGroup): string {
-  if (group === 'year') {
-    return new Intl.DateTimeFormat('id-ID', { year: 'numeric' }).format(date)
-  }
-  if (group === 'month') {
-    return new Intl.DateTimeFormat('id-ID', { month: 'short', year: 'numeric' }).format(date)
-  }
-  return new Intl.DateTimeFormat('id-ID', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(date)
+  if (group === 'year') return yearFormatter.format(date)
+  if (group === 'month') return monthFormatter.format(date)
+  return dayGroupFormatter.format(date)
 }
 
 export function formatDateValue(value: Date): string {
-  return new Intl.DateTimeFormat('id-ID', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(value)
+  return dateFormatter.format(value)
 }
 
 export function formatCellValue(value: unknown, type?: ColumnType): string {
