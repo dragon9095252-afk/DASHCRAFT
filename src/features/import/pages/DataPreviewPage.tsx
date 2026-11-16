@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ChartNoAxesCombined, Info, LayoutDashboard, SlidersHorizontal, Table2 } from 'lucide-react'
+import { Activity, ArrowLeft, ChartNoAxesCombined, Info, LayoutDashboard, SlidersHorizontal, Table2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { PageContainer } from '@/components/layout/PageContainer'
 import { EmptyState } from '@/components/common/EmptyState'
@@ -108,6 +108,12 @@ export function DataPreviewPage() {
             <Link to={'/statistics/' + dataset.id}>
               <ChartNoAxesCombined className="size-4" />
               Statistical analysis
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link to={'/analysis/' + dataset.id}>
+              <Activity className="size-4" />
+              Analysis Workbench
             </Link>
           </Button>
           <Button variant="outline" asChild>
