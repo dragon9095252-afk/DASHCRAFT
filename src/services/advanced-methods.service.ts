@@ -460,9 +460,12 @@ export function trainPredictiveRegression(
   const train = shuffled.slice(testSize)
   if (train.length < numericColumns.length + 2) return null
 
-  const featureMeans = numericColumns.map((_, dimension) =>
-    mean(train.flatMap((sample) => sample.features[dimension] === null ? [] : [sample.features[dimension] as number])),
-  )
+  const featureMeans = numericColumns.map((_, dimension) => {
+    const observed = train.flatMap((sample) =>
+      sample.features[dimension] === null ? [] : [sample.features[dimension] as number],
+    )
+    return observed.length ? mean(observed) : 0
+  })
   const impute = (sample: typeof samples[number]) =>
     sample.features.map((value, dimension) => value ?? featureMeans[dimension])
   const rawTrain = train.map(impute)
