@@ -34,6 +34,11 @@ const PivotPage = lazy(() =>
     default: module.PivotPage,
   })),
 )
+const StatisticsPage = lazy(() =>
+  import('@/features/statistics/pages/StatisticsPage').then((module) => ({
+    default: module.StatisticsPage,
+  })),
+)
 
 export function AppRouter() {
   return (
@@ -44,6 +49,7 @@ export function AppRouter() {
           <Route path="data-preview/:datasetId" element={<DataPreviewPage />} />
           <Route path="transform/:datasetId" element={<TransformationPage />} />
           <Route path="pivot/:datasetId" element={<PivotPage />} />
+          <Route path="statistics/:datasetId" element={<StatisticsPage />} />
           <Route path="builder/:dashboardId" element={<DashboardBuilderPage />} />
           <Route path="dashboards" element={<DashboardsPage />} />
           <Route path="settings" element={<SettingsPage />} />

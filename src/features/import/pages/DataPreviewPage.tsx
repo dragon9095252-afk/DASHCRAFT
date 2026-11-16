@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Info, LayoutDashboard, SlidersHorizontal, Table2 } from 'lucide-react'
+import { ArrowLeft, ChartNoAxesCombined, Info, LayoutDashboard, SlidersHorizontal, Table2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { PageContainer } from '@/components/layout/PageContainer'
 import { EmptyState } from '@/components/common/EmptyState'
@@ -57,7 +57,7 @@ export function DataPreviewPage() {
     toast.success('Dashboard dibuat', {
       description: 'KPI dan grafik awal sudah disiapkan dari data Anda.',
     })
-    navigate(`/builder/${dashboard.id}`)
+    navigate('/builder/' + dashboard.id)
   }
 
   const handleTypeChange = (columnId: string, type: ColumnType) => {
@@ -93,15 +93,21 @@ export function DataPreviewPage() {
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
           <Button variant="outline" asChild>
-            <Link to={`/transform/${dataset.id}`}>
+            <Link to={'/transform/' + dataset.id}>
               <SlidersHorizontal className="size-4" />
               Transformasi
             </Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link to={`/pivot/${dataset.id}`}>
+            <Link to={'/pivot/' + dataset.id}>
               <Table2 className="size-4" />
               Pivot table
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link to={'/statistics/' + dataset.id}>
+              <ChartNoAxesCombined className="size-4" />
+              Statistical analysis
             </Link>
           </Button>
           <Button variant="outline" asChild>
