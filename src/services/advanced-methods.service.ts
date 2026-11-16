@@ -438,7 +438,7 @@ export function trainPredictiveRegression(
   if (!targetColumn || targetColumn.type !== 'number') return null
   const numericColumns = dataset.columns.filter((column) =>
     column.type === 'number' && column.id !== targetColumnId &&
-    (!requestedFeatureIds?.length || requestedFeatureIds.includes(column.id)),
+    (requestedFeatureIds === undefined || requestedFeatureIds.includes(column.id)),
   ).slice(0, 8)
   if (!numericColumns.length) return null
 
