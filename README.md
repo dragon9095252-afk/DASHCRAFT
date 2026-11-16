@@ -1,6 +1,6 @@
 # Dashcraft
 
-Aplikasi client-side untuk mengubah file Excel/CSV menjadi dashboard interaktif. File diproses sepenuhnya di browser — tidak ada backend, akun, atau upload data ke server.
+Dashcraft adalah browser-based data analytics workspace untuk mengimpor, memeriksa, menyiapkan, menganalisis, dan menyajikan data Excel/CSV. Dataset tetap berada di browser; tidak ada upload data ke server.
 
 ## Menjalankan
 
@@ -23,10 +23,18 @@ npm run dev
 2. Pilih worksheet bila file memiliki lebih dari satu sheet.
 3. Periksa preview (50 baris/halaman) dan profil kolom; tipe kolom dan nama tampilan bisa diubah.
 4. Klik **Buat Dashboard** — KPI, grafik, dan filter awal dibuat otomatis.
-5. Edit visual lewat panel kanan, tambah/duplikat/hapus visual, dan gunakan filter global.
-6. Klik **Simpan** untuk menyimpan dashboard ke IndexedDB browser.
-7. Kelola dashboard di **Dashboard Saya**: buka, ganti nama, duplikat, atau hapus.
-8. Ekspor dashboard sebagai PNG, PDF, atau CSV (hanya baris terfilter).
+7. Edit visual lewat panel kanan, tambah/duplikat/hapus visual, dan gunakan filter global.
+8. Klik **Simpan** untuk menyimpan dashboard ke IndexedDB browser.
+9. Kelola dashboard di **Dashboard Saya**: buka, ganti nama, duplikat, atau hapus.
+10. Ekspor dashboard sebagai PNG, PDF, atau CSV (hanya baris terfilter).
+
+## Mesin analitik otomatis
+
+- Profiling per kolom: nilai valid, kosong, tidak valid, distinct, frekuensi kategori, statistik numerik, dan outlier berbasis IQR.
+- Deteksi baris duplikat dan ringkasan kualitas data berbasis heuristik.
+- Korelasi Pearson dan model regresi linear satu prediktor untuk eksplorasi hubungan.
+- Segmentasi K-means untuk baris lengkap dengan setidaknya dua fitur numerik.
+- Semua hasil bersifat deskriptif dan tidak mengubah sumber. Korelasi bukan sebab-akibat; anomali perlu ditinjau manusia.
 
 ## Penyimpanan dan ekspor
 
