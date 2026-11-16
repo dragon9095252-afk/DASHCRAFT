@@ -61,13 +61,13 @@ export function AnalysisWorkbenchPage() {
       'Min', 'Max', 'Mean', 'Median', 'Std dev', 'Q1', 'Q3', 'IQR outliers',
     ]
     const lines = [
-      headers.map(csv).join(','),
+      headers.map((value) => csv(value, true)).join(','),
       ...report.columns.map((column) => [
         column.name, column.type, column.validCount, column.missingCount,
         column.invalidCount, column.distinctCount, column.missingRate,
         column.min, column.max, column.mean, column.median,
         column.standardDeviation, column.q1, column.q3, column.outlierCount,
-      ].map(csv).join(',')),
+      ].map((value) => csv(value, typeof value === 'string')).join(',')),
     ]
     const blob = new Blob(['\\uFEFF' + lines.join('\\r\\n')], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
