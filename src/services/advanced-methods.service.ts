@@ -521,7 +521,10 @@ export function trainPredictiveRegression(
     mae,
     rmse,
     rSquared,
-    intercept: yMean + coefficients[0],
+    intercept: yMean + coefficients[0] - numericColumns.reduce(
+      (sum, _, index) => sum + (coefficients[index + 1] / featureScales[index]) * featureMeansTrain[index],
+      0,
+    ),
     coefficients: numericColumns.map((column, index) => ({
       name: column.displayName,
       coefficient: coefficients[index + 1] / featureScales[index],
