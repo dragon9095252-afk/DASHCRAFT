@@ -122,6 +122,8 @@ describe('XLSX import keeps native cell types', () => {
     expect(dataset.rows[0].col_2).toBe('00123')
     expect(dataset.columns[0].type).toBe('number')
     expect(dataset.columns[1].type).toBe('date')
+    expect(dataset.columns[2].type).toBe('text')
+    expect(formatCellValue(dataset.rows[0].col_2, dataset.columns[2].type)).toBe('00123')
   })
 
   it('preserves the exact instant of Excel date cells across timezones', async () => {

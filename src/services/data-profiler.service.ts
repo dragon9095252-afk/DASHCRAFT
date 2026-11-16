@@ -7,13 +7,20 @@ interface InferenceResult {
   confidence: number
 }
 
+// "00123" parses as a number but is an identifier: summing it is meaningless and
+// numeric formatting drops the leading zeros the user relies on. "0.25" is not a
+// code because the zero is followed by a separator, not another digit.
+function isLeadingZeroCode(value: string): boolean {
+  return /^[+-]?0\d/.test(value.trim())
+}
+
 function classifyValue(value: unknown): Exclude<ColumnType, 'unknown'> {
   if (value instanceof Date) return 'date'
   if (typeof value === 'number') return 'number'
   if (typeof value === 'boolean') return 'boolean'
   if (typeof value === 'string') {
     if (toDate(value) !== null) return 'date'
-    if (toNumber(value) !== null) return 'number'
+    if (!isLeadingZeroCode(value) && toNumber(value) !== null) return 'number'
     const lowered = value.trim().toLowerCase()
     if (lowered === 'true' || lowered === 'false') return 'boolean'
     return 'text'

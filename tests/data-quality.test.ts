@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { matchesType, toDate, toNumber } from '@/lib/value-utils'
+import { formatCellValue } from '@/lib/formatters'
+import { inferColumnType } from '@/services/data-profiler.service'
 
 describe('Indonesian spreadsheet value parsing', () => {
   it.each([
@@ -50,5 +52,29 @@ describe('Indonesian spreadsheet value parsing', () => {
     expect(matchesType('Rp 10.000,50', 'number')).toBe(true)
     expect(matchesType('16/11/2026', 'date')).toBe(true)
     expect(matchesType('not a date', 'date')).toBe(false)
+  })
+})
+
+describe('leading-zero codes are identifiers, not measures', () => {
+  it.each(['00123', '00456', '007', '00', '-00123', '+007'])(
+    'infers %s as text',
+    (input) => {
+      expect(inferColumnType([input]).type).toBe('text')
+    },
+  )
+
+  it.each(['0', '0.25', '0,25', '-0.5', '1234', '1.234', 'Rp 1.500.000'])(
+    'still infers %s as a number',
+    (input) => {
+      expect(inferColumnType([input]).type).toBe('number')
+    },
+  )
+
+  it('keeps the code readable in the preview', () => {
+    expect(formatCellValue('00123', 'text')).toBe('00123')
+  })
+
+  it('still parses a leading-zero code when the user asks for a number', () => {
+    expect(toNumber('00123')).toBe(123)
   })
 })
