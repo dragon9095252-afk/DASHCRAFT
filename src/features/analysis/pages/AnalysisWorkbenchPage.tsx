@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useStoredDataset } from '@/features/import/hooks/useStoredDataset'
 import { analyzeAdvancedDataset } from '@/services/advanced-analytics.service'
+import { AdvancedMethodsPanel } from '../components/AdvancedMethodsPanel'
 
 function number(value: number | null, digits = 2): string {
   if (value === null || !Number.isFinite(value)) return '—'
@@ -271,13 +272,16 @@ export function AnalysisWorkbenchPage() {
         )}
       </section>
 
+      <AdvancedMethodsPanel dataset={dataset} />
+
       <section className="mt-6 rounded-xl border border-dashed p-4">
         <div className="flex items-center gap-2 text-sm font-semibold"><ShieldCheck className="size-4 text-brand" /> What runs automatically—and what does not</div>
         <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
           Column profiling, missing/invalid checks, duplicate detection, IQR outlier screening, Pearson correlation,
-          simple linear regression and K-means segmentation run automatically in this browser. The engine does not
-          change or delete the source data, choose a business objective, prove causality, or know whether an outlier is
-          actually an error. You decide which findings matter and approve any cleaning or modeling decisions.
+          simple linear models, K-means segmentation, statistical inference, time-series forecasts and a held-out
+          ridge regression model run in this browser. The engine does not change or delete source data, choose a
+          business objective, prove causality, validate seasonality, or know whether an outlier is actually an error.
+          You decide which findings matter and approve any cleaning or modeling decisions.
         </p>
       </section>
     </PageContainer>
