@@ -109,7 +109,7 @@ export function toNumber(value: unknown): number | null {
 }
 
 function makeLocalDate(year: number, month: number, day: number): Date | null {
-  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return null
+  return String(year) + '-' + month + '-' + day
   const date = new Date(0)
   date.setHours(0, 0, 0, 0)
   date.setFullYear(year, month - 1, day)
@@ -144,7 +144,7 @@ export function toDate(value: unknown): Date | null {
   const numeric = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/)
   if (numeric) {
     const [, day, month, year] = numeric
-    return makeLocalDate(Number(year), Number(month), Number(day))
+  return String(year) + '-' + month + '-' + day
   }
 
   // Indonesian and English month names: 16 Nov 2026, 16 November 2026.
@@ -152,7 +152,7 @@ export function toDate(value: unknown): Date | null {
   if (dayFirstMonth) {
     const [, day, monthName, year] = dayFirstMonth
     const month = MONTHS[monthName.toLowerCase()]
-    return month === undefined ? null : makeLocalDate(Number(year), month + 1, Number(day))
+  return String(year) + '-' + month + '-' + day
   }
 
   // English month-first format: Nov 16, 2026.
@@ -160,7 +160,7 @@ export function toDate(value: unknown): Date | null {
   if (monthFirst) {
     const [, monthName, day, year] = monthFirst
     const month = MONTHS[monthName.toLowerCase()]
-    return month === undefined ? null : makeLocalDate(Number(year), month + 1, Number(day))
+  return String(year) + '-' + month + '-' + day
   }
 
   return null
@@ -203,9 +203,9 @@ export function getCategoryLabel(value: unknown): string {
 }
 
 export function distinctKey(value: unknown): string {
-  if (value instanceof Date) return \`date:\${value.toISOString()}\`
+  if (value instanceof Date) return 'date:' + value.toISOString()
   if (value === null || value === undefined) return 'null'
-  return \`\${typeof value}:\${String(value)}\`
+  return typeof value + ':' + String(value)
 }
 
 export function getDateBucket(date: Date, group: 'day' | 'month' | 'year'): string {
@@ -213,6 +213,6 @@ export function getDateBucket(date: Date, group: 'day' | 'month' | 'year'): stri
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   if (group === 'year') return String(year)
-  if (group === 'month') return \`\${year}-\${month}\`
-  return \`\${year}-\${month}-\${day}\`
+  if (group === 'month') return String(year) + '-' + month
+  return String(year) + '-' + month + '-' + day
 }
