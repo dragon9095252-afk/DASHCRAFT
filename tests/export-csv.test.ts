@@ -35,7 +35,7 @@ const columns: DatasetColumn[] = [
 describe('CSV export', () => {
   it('memakai displayName, BOM, dan CRLF', () => {
     const csv = buildCsv([{ col_0: 'Bandung', col_1: 1250000.5 }], columns)
-    expect(csv).toBe('\uFEFFCabang,Pendapatan\r\nBandung,1250000.5\r\n')
+    expect(csv).toBe('\\uFEFFCabang,Pendapatan\\r\\nBandung,1250000.5\\r\\n')
   })
 
   it('meng-escape koma dan kutip sesuai RFC 4180', () => {
@@ -44,8 +44,8 @@ describe('CSV export', () => {
   })
 
   it('meng-escape newline', () => {
-    const csv = buildCsv([{ col_0: 'Baris 1\nBaris 2', col_1: null }], columns)
-    expect(csv).toContain('"Baris 1\nBaris 2",')
+    const csv = buildCsv([{ col_0: 'Baris 1\\nBaris 2', col_1: null }], columns)
+    expect(csv).toContain('"Baris 1\\nBaris 2",')
   })
 
   it('memformat nilai kosong, tanggal, dan boolean', () => {
@@ -62,6 +62,30 @@ describe('CSV export', () => {
     const csv = buildCsv([{ col_0: 'A', col_1: 1234.56 }], columns)
     expect(csv).toContain(',1234.56')
     expect(csv).not.toContain('1.234,56')
+  })
+
+  it('menetralisir formula spreadsheet dalam nilai teks', () => {
+    const csv = buildCsv(
+      [{ col_0: '=1+1', col_1: '@SUM(A1:A2)' }],
+      columns,
+    )
+    expect(csv).toContain("'=1+1")
+    expect(csv).toContain("'@SUM(A1:A2)")
+  })
+
+  it('melindungi formula yang didahului spasi atau tab', () => {
+    const csv = buildCsv([{ col_0: '\\t=HYPERLINK(\"https://example.com\")', col_1: null }], columns)
+    expect(csv).toContain(\"'\\t=HYPERLINK\")
+  })
+
+  it('tetap mengekspor angka negatif sebagai angka, bukan formula teks', () => {
+    const csv = buildCsv([{ col_0: 'A', col_1: -123.45 }], columns)
+    expect(csv).toContain(',-123.45')
+  })
+
+  it('melindungi header yang diawali karakter formula', () => {
+    const formulaHeader = [column({ id: 'formula', displayName: '=1+1' })]
+    expect(buildCsv([{ formula: 'safe' }], formulaHeader)).toContain("'=1+1")
   })
 })
 

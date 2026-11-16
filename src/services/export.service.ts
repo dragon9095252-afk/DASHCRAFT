@@ -1,4 +1,5 @@
 import type { DatasetColumn, DatasetRow } from '@/domain/dataset.types'
+import { toNumber } from '@/lib/value-utils'
 
 export type ExportFormat = 'png' | 'pdf' | 'csv'
 
@@ -19,32 +20,27 @@ export function formatCsvValue(value: unknown): string {
   return String(value)
 }
 
-function csvEscape(value: string): string {
-  if (/[",\n\r]/.test(value)) {
-    return `"${value.replace(/"/g, '""')}"`
+function csvEscape(value: string, forceText = false): string {
+  // Quoting alone does not stop spreadsheet formula execution.
+  const formulaLike = /^[\u0000-\u0020\uFEFF]*[=+\-@]/.test(value)
+  const safeValue = formulaLike && (forceText || toNumber(value) === null) ? "'" + value : value
+  if (/[",\n\r]/.test(safeValue)) {
+    return '"' + safeValue.replace(/"/g, '""') + '"'
   }
-  return value
+  return safeValue
 }
 
 export function buildCsv(rows: DatasetRow[], columns: DatasetColumn[]): string {
-  const header = columns.map((column) => csvEscape(column.displayName)).join(',')
+  const header = columns.map((column) => csvEscape(column.displayName, true)).join(',')
   const body = rows.map((row) =>
-    columns.map((column) => csvEscape(formatCsvValue(row[column.id]))).join(','),
+    columns.map((column) => {
+      const value = row[column.id]
+      const isText = typeof value === 'string' && toNumber(value) === null
+      return csvEscape(formatCsvValue(value), isText)
+    }).join(','),
   )
-  return `\uFEFF${[header, ...body].join('\r\n')}\r\n`
+  return '\uFEFF' + [header, ...body].join('\r\n') + '\r\n'
 }
-
-export function sanitizeFileName(name: string): string {
-  const cleaned = name
-    .trim()
-    .replace(/[\\/:*?"<>|]+/g, '-')
-    .replace(/\s+/g, ' ')
-    .replace(/\s*-\s*/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^[-. ]+|[-. ]+$/g, '')
-  return cleaned || 'dashboard'
-}
-
 export function buildExportFileName(
   dashboardName: string,
   extension: ExportFormat,
