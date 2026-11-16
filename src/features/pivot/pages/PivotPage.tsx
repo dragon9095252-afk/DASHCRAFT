@@ -117,8 +117,11 @@ export function PivotPage() {
     }
     const lines = [headers.map((value) => escape(String(value), true)).join(',')]
     for (const row of pivot.result.rows) {
+      const rowLabels = row.kind === 'grand-total' && rowFieldIds.length
+        ? [row.label, ...Array.from({ length: rowFieldIds.length - 1 }, () => '')]
+        : row.labels
       const values = [
-        ...row.labels.map((value) => escape(String(value), true)),
+        ...rowLabels.map((value) => escape(String(value), true)),
         ...pivot.result.columns.map((column) => {
           const value = row.cells[column.key]
           return escape(value === null || value === undefined ? '' : String(value))
@@ -137,7 +140,7 @@ export function PivotPage() {
     toast.success('Pivot table exported')
   }
 
-  const dimensionColumns = dataset.columns.filter((column) => column.type === 'text' || column.type === 'boolean')
+  const dimensionColumns = dataset.columns.filter((column) => column.type === 'text' || column.type === 'boolean' || column.type === 'date')
   const numericColumns = dataset.columns.filter((column) => column.type === 'number')
   const valueColumns = aggregation === 'count' || aggregation === 'distinctCount' ? dataset.columns : numericColumns
 
