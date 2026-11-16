@@ -74,8 +74,8 @@ describe('CSV export', () => {
   })
 
   it('melindungi formula yang didahului spasi atau tab', () => {
-    const csv = buildCsv([{ col_0: '\t=HYPERLINK(\"https://example.com\")', col_1: null }], columns)
-    expect(csv).toContain(\"'\t=HYPERLINK\")
+    const csv = buildCsv([{ col_0: '\t=HYPERLINK("https://example.com")', col_1: null }], columns)
+    expect(csv).toContain("'\t=HYPERLINK")
   })
 
   it('tetap mengekspor angka negatif sebagai angka, bukan formula teks', () => {
