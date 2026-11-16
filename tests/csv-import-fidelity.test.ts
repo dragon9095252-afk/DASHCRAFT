@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import * as XLSX from 'xlsx'
 import type { Dataset } from '@/domain/dataset.types'
-import { toDate, toNumber } from '@/lib/value-utils'
+import { getDateBucket, toDate, toNumber } from '@/lib/value-utils'
 import { formatCellValue } from '@/lib/formatters'
 import { aggregateSeries, computeMetric } from '@/services/aggregation.service'
 import { buildDataset, parseWorkbook } from '@/services/file-import.service'
@@ -122,5 +122,30 @@ describe('XLSX import keeps native cell types', () => {
     expect(dataset.rows[0].col_2).toBe('00123')
     expect(dataset.columns[0].type).toBe('number')
     expect(dataset.columns[1].type).toBe('date')
+  })
+
+  it('preserves the exact instant of Excel date cells across timezones', async () => {
+    const source = [new Date(2026, 10, 16), new Date(2026, 0, 1), new Date(2026, 11, 31)]
+    const sheet = XLSX.utils.aoa_to_sheet([['Tanggal'], ...source.map((date) => [date])])
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, sheet, 'Data')
+    const buffer = XLSX.write(workbook, { type: 'array', bookType: 'xlsx', cellDates: true })
+    const file = new File([buffer], 'dates.xlsx', {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    })
+
+    const parsed = await parseWorkbook(file)
+    const dataset = buildDataset({ workbook: parsed, fileName: file.name, fileType: 'xlsx' })
+
+    // SheetJS >=0.20 stores date cells as UTC and relies on sheet_to_json to map
+    // them back to local wall-clock time. Losing that step shifts the day by the
+    // runner's offset, so compare instants rather than calendar fields.
+    const imported = dataset.rows.map((row) => row.col_0 as Date)
+    expect(imported.map((date) => date.getTime())).toEqual(source.map((date) => date.getTime()))
+    expect(imported.map((date) => getDateBucket(date, 'day'))).toEqual([
+      '2026-11-16',
+      '2026-01-01',
+      '2026-12-31',
+    ])
   })
 })
