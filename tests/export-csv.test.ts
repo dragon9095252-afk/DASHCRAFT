@@ -35,7 +35,7 @@ const columns: DatasetColumn[] = [
 describe('CSV export', () => {
   it('memakai displayName, BOM, dan CRLF', () => {
     const csv = buildCsv([{ col_0: 'Bandung', col_1: 1250000.5 }], columns)
-    expect(csv).toBe('\\uFEFFCabang,Pendapatan\\r\\nBandung,1250000.5\\r\\n')
+    expect(csv).toBe('\uFEFFCabang,Pendapatan\r\nBandung,1250000.5\r\n')
   })
 
   it('meng-escape koma dan kutip sesuai RFC 4180', () => {
@@ -44,8 +44,8 @@ describe('CSV export', () => {
   })
 
   it('meng-escape newline', () => {
-    const csv = buildCsv([{ col_0: 'Baris 1\\nBaris 2', col_1: null }], columns)
-    expect(csv).toContain('"Baris 1\\nBaris 2",')
+    const csv = buildCsv([{ col_0: 'Baris 1\nBaris 2', col_1: null }], columns)
+    expect(csv).toContain('"Baris 1\nBaris 2",')
   })
 
   it('memformat nilai kosong, tanggal, dan boolean', () => {
