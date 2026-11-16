@@ -24,6 +24,16 @@ const SettingsPage = lazy(() =>
     default: module.SettingsPage,
   })),
 )
+const TransformationPage = lazy(() =>
+  import('@/features/transformation/pages/TransformationPage').then((module) => ({
+    default: module.TransformationPage,
+  })),
+)
+const PivotPage = lazy(() =>
+  import('@/features/pivot/pages/PivotPage').then((module) => ({
+    default: module.PivotPage,
+  })),
+)
 
 export function AppRouter() {
   return (
@@ -32,6 +42,8 @@ export function AppRouter() {
         <Route element={<AppLayout />}>
           <Route index element={<HomePage />} />
           <Route path="data-preview/:datasetId" element={<DataPreviewPage />} />
+          <Route path="transform/:datasetId" element={<TransformationPage />} />
+          <Route path="pivot/:datasetId" element={<PivotPage />} />
           <Route path="builder/:dashboardId" element={<DashboardBuilderPage />} />
           <Route path="dashboards" element={<DashboardsPage />} />
           <Route path="settings" element={<SettingsPage />} />

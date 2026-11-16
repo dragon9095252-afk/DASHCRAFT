@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Info, LayoutDashboard } from 'lucide-react'
+import { ArrowLeft, Info, LayoutDashboard, SlidersHorizontal, Table2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { PageContainer } from '@/components/layout/PageContainer'
 import { EmptyState } from '@/components/common/EmptyState'
@@ -91,7 +91,19 @@ export function DataPreviewPage() {
             {dataset.sourceFileName} · diperbarui {formatRelativeTime(dataset.updatedAt)}
           </p>
         </div>
-        <div className="flex shrink-0 gap-2">
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <Button variant="outline" asChild>
+            <Link to={`/transform/${dataset.id}`}>
+              <SlidersHorizontal className="size-4" />
+              Transformasi
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link to={`/pivot/${dataset.id}`}>
+              <Table2 className="size-4" />
+              Pivot table
+            </Link>
+          </Button>
           <Button variant="outline" asChild>
             <Link to="/">Ganti file</Link>
           </Button>
@@ -112,9 +124,7 @@ export function DataPreviewPage() {
         <section className="min-w-0">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-sm font-semibold">Preview data</h2>
-            <span className="text-xs text-muted-foreground">
-              Nilai sumber tidak diubah
-            </span>
+            <span className="text-xs text-muted-foreground">Nilai sumber tidak diubah</span>
           </div>
           <DataPreviewTable dataset={dataset} />
         </section>
