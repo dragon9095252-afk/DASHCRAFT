@@ -97,7 +97,7 @@ export function AdvancedMethodsPanel({ dataset }: { dataset: Dataset }) {
   const selectedFeatures = featureIds.filter((id) => id !== modelTargetId)
   const model = useMemo(
     () => modelTargetId
-      ? trainPredictiveRegression(dataset, modelTargetId, selectedFeatures)
+      ? trainPredictiveRegression(dataset, modelTargetId, featureIds.filter((id) => id !== modelTargetId))
       : null,
     [dataset, modelTargetId, featureIds],
   )
